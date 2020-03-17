@@ -1,4 +1,4 @@
-# files-scripts
+# Introduction
 Handy scripts collection for handling files.
 
 Usage instructions are placed under each folder.
