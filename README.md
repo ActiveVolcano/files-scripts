@@ -1,5 +1,4 @@
-English
-- - - -
+| English |
 
 # Introduction
 Handy scripts collection for handling files.
@@ -9,8 +8,9 @@ Usage instructions are placed under each folder.
 # find-charset-files
 Search file content by specified character set over folder tree.
 
-Chinese | 中文
 - - - -
+
+| Chinese | 中文 |
 
 # 概述
 文件操作小工具脚本集。
