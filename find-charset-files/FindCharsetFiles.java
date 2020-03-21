@@ -30,15 +30,15 @@ public final class FindCharsetFiles {
 	static Config config = null;
 	static class Config {
 		Path            where;
-		List<String>    wildcard;
+		List<String>    wildcards;
 		String          what;
 		Charset         charset;
 
 		//--------------------------------------------------------------------
 		@Override
 		public String toString () {
-			return String.format ("Searching '%s'%s for '%s' with character set %s...%n",
-				config.where, config.wildcard, config.what, config.charset);
+			return String.format ("Searching '%s'%s for '%s' with character set %s...",
+				config.where, config.wildcards, config.what, config.charset);
 		}
 
 		//--------------------------------------------------------------------
@@ -51,7 +51,7 @@ public final class FindCharsetFiles {
 			line = stdinLine ("."    , "        Where to search (default to current folder): ");
 			config.where = Paths.get (line);
 			line = stdinLine ("*"    , "File name wildcards (comma seperated, default to *): ");
-			config.wildcard = List.of (line.split (","));
+			config.wildcards = List.of (line.split (","));
 			line = stdinLine (""     , "             What to search (plain text, not regex): ");
 			config.what = line;
 			if (config.what.length () == 0) {
@@ -91,8 +91,8 @@ public final class FindCharsetFiles {
 	}
 
 	//------------------------------------------------------------------------
-	static int walkFileTree () throws IOException {
-		final var wildcard  = new WildcardFileFilter (config.wildcard, IOCase.SYSTEM);
+	private static int walkFileTree () throws IOException {
+		final var wildcards = new WildcardFileFilter (config.wildcards, IOCase.SYSTEM);
 		final var what      = config.what.getBytes (config.charset);
 		final var linefeed  = "\n".getBytes (config.charset);
 		final var cound     = new AtomicInteger ();
@@ -101,7 +101,7 @@ public final class FindCharsetFiles {
 			final File IGNORED = null;
 			@Override
 			public FileVisitResult visitFile (final Path p, final BasicFileAttributes attrs) throws IOException {
-				if (wildcard.accept (IGNORED, p.toString ())) {
+				if (wildcards.accept (IGNORED, p.toString ())) {
 					cound.addAndGet (isFileContainsBytes (p, what, linefeed));
 				}
 				return FileVisitResult.CONTINUE;
@@ -113,7 +113,7 @@ public final class FindCharsetFiles {
 
 	//------------------------------------------------------------------------
 	/** @return 1 if the file contains these bytes; 0 if not. */
-	static int isFileContainsBytes (final Path where, final byte[] what, final byte[] linefeed) {
+	private static int isFileContainsBytes (final Path where, final byte[] what, final byte[] linefeed) {
 		Objects.requireNonNull (where);
 		Objects.requireNonNull (what);
 		if (what.length <= 0) {
@@ -147,7 +147,7 @@ public final class FindCharsetFiles {
 	}
 
 	//------------------------------------------------------------------------
-	static boolean isContains (final byte[] content, final byte[] what, final int start) {
+	private static boolean isContains (final byte[] content, final byte[] what, final int start) {
 		if (content.length < start + what.length) {
 			return false;
 		}
