@@ -20,6 +20,9 @@ Linux:
 ./find-charset-files.sh
 ```
 
+# Further Development
+It may be a good idea to support zip packages like *.zip, *.jar, *.docx, *.xlsx, *.pptx ...
+
 - - - -
 
 | Chinese | 中文 |
@@ -43,3 +46,6 @@ Linux:
 ```bash
 ./find-charset-files.sh
 ```
+
+# 展望
+后续可考虑支持 ZIP 压缩包，如*.zip、*.jar、*.docx、*.xlsx、*.pptx……
