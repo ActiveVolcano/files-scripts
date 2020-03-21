@@ -28,11 +28,19 @@ public final class FindCharsetFiles {
 	static final PrintStream stderr = System.err;
 	static final String HR = "--------";
 
+	static Config config = null;
 	static class Config {
 		Path            where;
 		List<String>    wildcard;
 		String          what;
 		Charset         charset;
+
+		//--------------------------------------------------------------------
+		@Override
+		public String toString () {
+			return String.format ("Searching '%s'%s for '%s' with character set %s...%n",
+				config.where, config.wildcard, config.what, config.charset);
+		}
 
 		//--------------------------------------------------------------------
 		/** Get configuration from standard input. */
@@ -54,27 +62,28 @@ public final class FindCharsetFiles {
 			line = stdinLine ("UTF-8", "             Which character set (default to UTF-8): ");
 			config.charset = Charset.forName (line);
 
-			stdout.printf ("Searching '%s'%s for '%s' with character set %s...%n",
-				config.where, config.wildcard, config.what, config.charset);
-			stdout.println (HR);
 			return config;
 		}
-	}
 
-	//------------------------------------------------------------------------
-	/** Prompt and then read a line from standard input. Return default value if empty input. */
-	static String stdinLine (final String defaultLine, final String format, final Object... args)
-		throws IOException {
-		stdout.printf (format, args);
-		String line = stdin.readLine ().trim ();
-		return line.length () > 0 ? line : defaultLine;
+		//--------------------------------------------------------------------
+		/** Prompt and then read a line from standard input. Return default value if empty input. */
+		static String stdinLine (final String defaultLine, final String format, final Object... args)
+			throws IOException {
+			stdout.printf (format, args);
+			String line = stdin.readLine ().trim ();
+			return line.length () > 0 ? line : defaultLine;
+		}
+
 	}
 
 	//------------------------------------------------------------------------
 	/** Program entry */
 	public static void main (final String... args) {
 		try {
-			var n = walkFileTree (Config.fromStdIn (args));
+			config = Config.fromStdIn (args);
+			stdout.println (config.toString ());
+			stdout.println (HR);
+			var n = walkFileTree ();
 			stdout.println (HR);
 			stdout.printf ("Found in %d files.%n", n);
 		} catch (IOException e) {
@@ -83,8 +92,7 @@ public final class FindCharsetFiles {
 	}
 
 	//------------------------------------------------------------------------
-	static int walkFileTree (final Config config) throws IOException {
-		Objects.requireNonNull (config);
+	static int walkFileTree () throws IOException {
 		final var wildcard  = new WildcardFileFilter (config.wildcard, IOCase.SYSTEM);
 		final var what      = config.what.getBytes (config.charset);
 		final var linefeed  = "\n".getBytes (config.charset);
