@@ -5,7 +5,7 @@
  * Open source under WTFPL (Do What The Fuck You Want To Public License) http://www.wtfpl.net
  *
  * Run as script via Java 11:
- * java -cp lib/commons-io-2.6.jar find-charset-files.java
+ * java -cp lib/commons-io-2.6.jar FindCharsetFiles.java
  */
 
 import java.io.*;
