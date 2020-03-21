@@ -7,7 +7,6 @@
  * Run as script via Java 11:
  * java -cp lib/commons-io-2.6.jar find-charset-files.java
  */
-// TODO Test UTF-16
 
 import java.io.*;
 import java.nio.charset.*;
