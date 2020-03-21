@@ -43,7 +43,7 @@ public final class FindCharsetFiles {
 
 		//--------------------------------------------------------------------
 		/** Get configuration from standard input. */
-		static Config fromStdIn (final String... args)
+		static Config fromStdIn ()
 			throws IOException {
 			var config = new Config ();
 			String line;
@@ -79,7 +79,7 @@ public final class FindCharsetFiles {
 	/** Program entry */
 	public static void main (final String... args) {
 		try {
-			config = Config.fromStdIn (args);
+			config = Config.fromStdIn ();
 			stdout.println (config.toString ());
 			stdout.println (HR);
 			var n = walkFileTree ();
