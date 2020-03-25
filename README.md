@@ -11,6 +11,7 @@ Search file content by specified character set over folder tree.
 # Roadmap
 1. linux-status: linux.status/ df -h, fdisk -l, free -h, cpuinfo, netstat -anp, ps -auxww, /proc/{pid}/exe, cwd
 2. file-part-hex: Hex view of part of a file.
+3. compare-2-folders
 
 - - - -
 
