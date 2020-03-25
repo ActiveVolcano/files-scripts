@@ -27,7 +27,9 @@ public final class RenameWechatQqExport {
 		IOCase.SYSTEM);
 
 	static final List<String> PREFIX_TO_REMOVE = List.of (
-		"΢��ͼƬ", "TIMͼƬ", "QQͼƬ", "mmexport");
+		// Source file in GBK
+		// String constants in UTF-16BE ΢��ͼƬ TIMͼƬ QQͼƬ
+		"\u5FAE\u4FE1\u56FE\u7247", "TIM\u56FE\u7247", "QQ\u56FE\u7247", "mmexport");
 
 	static final BufferedReader stdin = new BufferedReader (new InputStreamReader (System.in));
 	static final PrintStream stdout = System.out;
@@ -80,7 +82,7 @@ public final class RenameWechatQqExport {
 			if (c.where != null) {
 				return c;
 			}
-			c.where = Paths.get (stdinLine (".", "Where to search (default to current folder): "));
+			c.where = Paths.get (stdinLine (".", "Where to search (default to current folder):  "));
 			return c;
 		}
 
