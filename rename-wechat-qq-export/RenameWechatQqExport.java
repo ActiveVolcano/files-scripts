@@ -11,6 +11,7 @@
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
@@ -25,8 +26,8 @@ public final class RenameWechatQqExport {
 		List.of ("*.jpg", "*.jpeg", "*.jpe", "*.png", "*.gif", "*.bmp"),
 		IOCase.SYSTEM);
 
-	static final List<String> PREFIX_REMOVE = List.of (
-		"΢��ͼƬ", "TIMͼƬ", "QQͼƬ");
+	static final List<String> PREFIX_TO_REMOVE = List.of (
+		"΢��ͼƬ", "TIMͼƬ", "QQͼƬ", "mmexport");
 
 	static final BufferedReader stdin = new BufferedReader (new InputStreamReader (System.in));
 	static final PrintStream stdout = System.out;
@@ -104,7 +105,7 @@ public final class RenameWechatQqExport {
 			stdout.println (HR);
 			var n = walkFileTree ();
 			stdout.println (HR);
-			stdout.printf ("Renamed %d files.%n", n);
+			stdout.printf  ("Renamed %d files.%n", n);
 
 		} catch (IOException e) {
 			stderr.println (e.getMessage ());
@@ -120,7 +121,7 @@ public final class RenameWechatQqExport {
 			@Override
 			public FileVisitResult visitFile (final Path p, final BasicFileAttributes attrs) throws IOException {
 				if (WILDCARDS.accept (IGNORED, p.toString ())) {
-					cound.addAndGet (rename (p));
+					cound.addAndGet (checkNamePrefix (p));
 				}
 				return FileVisitResult.CONTINUE;
 			}
@@ -131,34 +132,86 @@ public final class RenameWechatQqExport {
 
 	//------------------------------------------------------------------------
 	/** @return 1 if the file renamed; 0 if not. */
-	private static int rename (final Path p) {
+	private static int checkNamePrefix (final Path p) {
 		Objects.requireNonNull (p);
-		for (String prefix1 : PREFIX_REMOVE) {
-			if (p.getFileName ().toString ().startsWith (prefix1)) {
-				return removePrefix (p, prefix1.length ());
+		for (String prefix1 : PREFIX_TO_REMOVE) {
+			if (getFileNameNoPath (p).startsWith (prefix1)) {
+				return removeNamePrefix (p, prefix1.length ());
 			}
 		}
 		return 0;
 	}
 
 	//------------------------------------------------------------------------
+	/** @return Only file name with extensive name, excluding the folder path part. */
+	private static String getFileNameNoPath (final Path p) {
+		return (p != null && p.getNameCount () >= 1) ?
+			p.getName (p.getNameCount () - 1).toString () :
+			"";
+	}
+
+	//------------------------------------------------------------------------
+	/** @return Only file name without extensive name */
+	private static String getFileNameNoExt (final String n) {
+		int i = n.lastIndexOf ('.');
+		return i >= 0 ? n.substring (0, i) : n;
+	}
+
+	//------------------------------------------------------------------------
+	/** @return Extensive name of a file, including the dot character '.' */
+	private static String getExtName (final Path p) {
+		String n = getFileNameNoPath (p);
+		int i = n.lastIndexOf ('.');
+		return i >= 0 ? n.substring (i) : "";
+	}
+
+	//------------------------------------------------------------------------
 	/** @return 1 if the file renamed; 0 if not. */
-	private static int removePrefix (final Path path, final int prefix) {
-		if (path == null || prefix <= 0 || path.getFileName ().toString ().length () <= prefix) {
+	private static int removeNamePrefix (final Path src, final int prefix) {
+		if (src == null || prefix <= 0) {
 			return 0;
 		}
-		File src = path.toFile ();
-		String destName = path.getFileName ().toString ().substring (prefix);
+		String srcName = getFileNameNoPath (src);
+		if (srcName.length () <= prefix) {
+			return 0;
+		}
+		
+		String destName = srcName.substring (prefix);
 		if (destName.startsWith ("_") && destName.length () > 1) {
 			destName = destName.substring (1);
 		}
-		File dest = new File (path.getParent ().toString (), destName);
-		stdout.printf ("%s -> %s%n", src.getName (), dest.getName ());
-		// TODO confirm rename
-		src.renameTo (dest);
-		return 1;
+		destName = timestamp2daytime (getFileNameNoExt (destName)) + getExtName (src);
+		Path dest = src.resolveSibling (destName);
+		
+		stdout.printf ("%s -> %s%n", srcName, destName);
+		try {
+			if (Files.exists (dest, LinkOption.NOFOLLOW_LINKS)) {
+				if (! Config.stdinLine ("n", "Replace existing? (Y/N) ").equalsIgnoreCase ("y")) {
+					return 0;
+				}
+			}
+			Files.move (src, dest, StandardCopyOption.REPLACE_EXISTING);
+			return 1;
+
+		} catch (IOException e) {
+			stderr.println (e.getMessage ());
+			return 0;
+		}
 	}
 
-	// TODO mmexport timestamp daytime
+	//------------------------------------------------------------------------
+	/** @return Convert timestamp to daytime, or return the same value if it is not in millisecond timestamp format. */
+	private static String timestamp2daytime (String timestamp) {
+		try {
+			long ms = Long.parseLong (timestamp);
+			if (ms < 1000000000000L || ms > 9999999999999L) {
+				return timestamp;
+			}
+			return new SimpleDateFormat ("yyyyMMddHHmmss").format (new Date (ms));
+			
+		} catch (NumberFormatException e) {
+			return timestamp;
+		}
+	}
 
 }
