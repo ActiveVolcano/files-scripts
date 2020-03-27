@@ -1,13 +1,3 @@
-/*
- * Search file content by specified character set over folder tree.
- *
- * Written by CHEN Qingcan, Spring 2020, Foshan China
- * Open source under WTFPL (Do What The Fuck You Want To Public License) http://www.wtfpl.net
- *
- * Run as script via Java 11:
- * java -cp lib/commons-io-2.6.jar FindCharsetFiles.java
- */
-
 import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
@@ -19,7 +9,19 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.io.IOCase;
 
 //----------------------------------------------------------------------------
-/** Search file content by specified character set over folder tree. */
+/**
+ * Search file content by specified character set over folder tree.
+ *
+ * <p>
+ * Written by CHEN Qingcan, Spring 2020, Foshan China <br>
+ * Open source under WTFPL (Do What The Fuck You Want To Public License) http://www.wtfpl.net
+ *
+ * <p>
+ * Run as script via Java 11: <br>
+ * <code>
+ * java -cp lib/commons-io-2.6.jar FindCharsetFiles.java
+ * </code>
+ */
 public final class FindCharsetFiles {
 
 	static final BufferedReader stdin = new BufferedReader (new InputStreamReader (System.in));

@@ -1,13 +1,3 @@
-/*
- * Batch rename Tencent instant messaging applications (Wechat, QQ, TIM...) exported pictures in a folder.
- *
- * Written by CHEN Qingcan, Spring 2020, Foshan China
- * Open source under WTFPL (Do What The Fuck You Want To Public License) http://www.wtfpl.net
- *
- * Run as script via Java 11:
- * java -cp lib/commons-io-2.6.jar RenameWechatQqExport.java
- */
-
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -19,7 +9,19 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 //----------------------------------------------------------------------------
-/** Search file content by specified character set over folder tree. */
+/**
+ * Batch rename Tencent instant messaging applications (Wechat, QQ, TIM...) exported pictures in a folder.
+ *
+ * <p>
+ * Written by CHEN Qingcan, Spring 2020, Foshan China <br>
+ * Open source under WTFPL (Do What The Fuck You Want To Public License) http://www.wtfpl.net
+ *
+ * <p>
+ * Run as script via Java 11: <br>
+ * <code>
+ * java -cp lib/commons-io-2.6.jar RenameWechatQqExport.java
+ * </code>
+ */
 public final class RenameWechatQqExport {
 
 	static final WildcardFileFilter WILDCARDS  = new WildcardFileFilter (
