@@ -1,5 +1,7 @@
 /*
- * Rename Tencent instant messaging applications (Wechat, QQ, TIM...) exported pictures.
+ * Batch rename Tencent instant messaging applications (Wechat, QQ, TIM...) exported pictures in a folder:
+ * 1. Remove the file name prefix.
+ * 2. Convert the timestamp string to daytime string.
  *
  * Written by CHEN Qingcan, Spring 2020, Foshan China
  * Open source under WTFPL (Do What The Fuck You Want To Public License) http://www.wtfpl.net
