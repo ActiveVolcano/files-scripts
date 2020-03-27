@@ -14,7 +14,7 @@ Batch rename Tencent instant messaging applications (Wechat, QQ, TIM...) exporte
 2. Convert the timestamp string to daytime string.
 
 # Roadmap
-1. linux-status: linux.status/ df -h, fdisk -l, free -h, meminfo, cpuinfo, netstat -anp, iptables -L -n, firewall-cmd --list-port, --list-service, route print, ps -auxww, /proc/{pid}/exe, cwd
+1. linux-status: linux.status/ df -h, fdisk -l, free -h, meminfo, cpuinfo, netstat -anp, iptables -L -n, firewall-cmd --list-port, --list-service, route print, set, ps -auxww, /proc/{pid}/exe, cwd, docker ps
 2. file-part-hex: Hex view of part of a file.
 3. compare-2-folders
 
