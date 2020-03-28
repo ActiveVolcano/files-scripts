@@ -8,6 +8,9 @@ Batch rename Tencent instant messaging applications (Wechat, QQ, TIM...) exporte
 NOTE: At this moment, only file name prefix in Chinese is supported.
 Please tell me prefix in other languages by issues or pull requests.
 
+# System Requirements
+Java ≥ 11
+
 # Usage
 Windows:
 ```dos
@@ -34,6 +37,9 @@ Please tell me prefix in other languages by issues or pull requests.
 
 注：目前仅支持中文版前缀。
 欢迎通过 Issues 或 Pull requests 把其它语言的前缀告诉我。
+
+# 系统需求
+Java ≥ 11
 
 # 用法
 Windows:

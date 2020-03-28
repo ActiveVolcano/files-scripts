@@ -9,6 +9,9 @@ Tested character sets:
 * UTF-16BE
 * UTF-16LE
 
+# System Requirements
+Java ≥ 11
+
 # Usage
 Windows:
 ```dos
@@ -35,6 +38,9 @@ It may be a good idea to support zip packages like *.zip, *.jar, *.docx, *.xlsx,
 * UTF-8
 * UTF-16BE
 * UTF-16LE
+
+# 系统需求
+Java ≥ 11
 
 # 用法
 Windows:
