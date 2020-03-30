@@ -14,7 +14,10 @@ Batch rename Tencent instant messaging applications (Wechat, QQ, TIM...) exporte
 2. Convert the timestamp string to daytime string.
 
 # linux-status
-Collect Linux running processes status and write into folder linux.status
+Collect Linux running processes status and write into folder linux.status.
+Can be used to make a record before reboot, and confirm after reboot.
+
+Make life of reboot easier.
 
 # Roadmap
 2. file-part-hex: Hex view of part of a file.
@@ -39,3 +42,4 @@ Collect Linux running processes status and write into folder linux.status
 
 # linux-status
 收集 Linux 运行中的进程状态，写入 linux.status 文件夹。
+可用于重启前先记录，重启后对照记录核对服务是否齐全，让重启工作轻松点。
