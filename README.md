@@ -21,8 +21,8 @@ Can be used to make a record before reboot, and confirm after reboot.
 Make life of reboot easier.
 
 # Roadmap
-2. file-part-hex: Hex view of part of a file.
-3. compare-2-folders
+1. file-part-hex: Hex view of part of a file.
+2. compare-2-folders
 
 - - - -
 
