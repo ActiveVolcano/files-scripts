@@ -2,6 +2,7 @@
 
 # linux-status
 Collect Linux running processes status and write into folder linux.status.
+
 Can be used to make a record before reboot, and confirm after reboot.
 
 Make life of reboot easier.
@@ -20,6 +21,7 @@ Java ≥ 11
 
 # linux-status
 收集 Linux 运行中的进程状态，写入 linux.status 文件夹。
+
 可用于重启前先记录，重启后对照记录核对服务是否齐全，让重启工作轻松点。
 
 # 系统需求
