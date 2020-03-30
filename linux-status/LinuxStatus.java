@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 //----------------------------------------------------------------------------
 /**
@@ -26,20 +28,23 @@ public final class LinuxStatus {
 	public static void main (final String... args) {
 		try {
 			DIR.mkdir ();
-			record ("df-h.txt", "df", "-h");
-			record ("fdisk-l.txt", "fdisk", "-l");
-			record ("mount.txt", "mount");
-			record ("free-h.txt", "free", "-h");
-			record ("meminfo.txt", "cat", "/proc/meminfo");
-			record ("cpuinfo.txt", "cat", "/proc/cpuinfo");
-			record ("netstat-anp.txt", "netstat", "-anp");
-			record ("iptables-L-n.txt", "iptables", "-L", "-n");
-			record ("firewall-cmd--list-port.txt", "firewall-cmd", "--list-port");
-			record ("firewall-cmd--list-service.txt", "firewall-cmd", "--list-service");
-			record ("route.txt", "route");
-			// TODO record ("set.txt", "set");
-			record ("ps-auxww.txt", "ps", "-auxww");
-			record ("docker_ps.txt", "docker", "ps");
+			record ("date--rfc-3339.txt",               "date", "--rfc-3339=seconds");
+			record ("df-h.txt",                         "df", "-h");
+			record ("fdisk-l.txt",                      "fdisk", "-l");
+			record ("mount.txt",                        "mount");
+			record ("free-h.txt",                       "free", "-h");
+			record ("meminfo.txt",                      "cat", "/proc/meminfo");
+			record ("cpuinfo.txt",                      "cat", "/proc/cpuinfo");
+			record ("ip_addr.txt",                      "ip", "addr");
+			record ("netstat-anp.txt",                  "netstat", "-anp");
+			record ("iptables-L-n.txt",                 "iptables", "-L", "-n");
+			record ("firewall-cmd--list-port.txt",      "firewall-cmd", "--list-port");
+			record ("firewall-cmd--list-service.txt",   "firewall-cmd", "--list-service");
+			record ("route.txt",                        "route");
+			record ("ps-auxww.txt",                     "ps", "-auxww");
+			record ("docker_ps.txt",                    "docker", "ps");
+			env    ("set.txt");
+			plusProcessPath ("ps-auxww.txt");
 			
 		} catch (IOException e) {
 			stderr.printf ("[%s] %s%n", e.getClass ().getName (), e.getMessage ());
@@ -60,6 +65,45 @@ public final class LinuxStatus {
 				.waitFor ();
 		} catch (InterruptedException e) { /* ignore */ }
 		stdout.println ("(Done)");
+	}
+
+	//------------------------------------------------------------------------
+	/** Record environment variables to a file. */
+	private static void env (final String outFileName) throws IOException {
+		stdout.print ("Recoding: set\t");
+		var env = System.getenv ();
+		var out = new StringBuilder ();
+		var path = Paths.get (DIR.toString (), outFileName);
+		env.forEach ((key, value) -> out.append (String.format ("%s=%s%n", key, value)));
+		Files.writeString (path, out.toString ());
+		stdout.println ("(Done)");
+	}
+
+	//------------------------------------------------------------------------
+	/** Plus process information with path. */
+	private static void plusProcessPath (final String psFileName) throws IOException {
+		var path  = Paths.get (DIR.toString (), psFileName);
+		var lines = Files.readAllLines (path);
+		if (lines.size () <= 0) {
+			return;
+		}
+		
+		lines.set (0, lines.get (0) + "        cwd        exe        cmdline");
+		for (int i = 1 ; i < lines.size () ; i++) {
+			var s = new Scanner (lines.get (i));
+			s.next (); // USER
+			var pid  = s.next ();
+			var proc = Paths.get ("/proc/", pid);
+			String cwd = "", exe = "", cmdline = "";
+			try { cwd  = proc.resolve ("cwd").toRealPath ().toString (); }
+			catch (NoSuchFileException e) { /* ignore */ }
+			try { exe  = proc.resolve ("exe").toRealPath ().toString (); }
+			catch (NoSuchFileException e) { /* ignore */ }
+			try { cmdline = Files.readString (proc.resolve ("cmdline")); }
+			catch (NoSuchFileException e) { /* ignore */ }
+			lines.set (i, String.format ("%s    %s    %s    %s", lines.get (i), cwd, exe, cmdline));
+		}
+		Files.write (path, lines);
 	}
 
 }
