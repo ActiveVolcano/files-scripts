@@ -7,7 +7,9 @@ Hex view of part of a file.
 Java ≥ 11
 
 # Usage
-If no command line argument provided, the script will prompt to ask.
+Default value: offset = 0, length = 256 (100 in hex).
+
+If no command line argument provided, it prompts to ask.
 
 Windows:
 ```dos
@@ -33,6 +35,8 @@ Preview window supports MBCS (Multi-Byte Character Set), like GB2312, GBK, UTF-8
 Java ≥ 11
 
 # 用法
+缺省值：offset = 0、length = 256 (十六进制 100)
+
 如无命令行参数，脚本将提示输入。
 
 Windows:
