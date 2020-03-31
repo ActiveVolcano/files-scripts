@@ -45,8 +45,7 @@ public final class FindCharsetFiles {
 
 		//--------------------------------------------------------------------
 		/** Get configuration from standard input. */
-		static Config fromStdIn ()
-			throws IOException {
+		static Config fromStdIn () throws IOException {
 			var config = new Config ();
 			String line;
 

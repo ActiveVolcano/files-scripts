@@ -1,7 +1,7 @@
 | English |
 
 # Introduction
-Handy scripts collection for handling files.
+Handy scripts for handling files.
 
 Usage instructions are placed under each folder.
 
@@ -20,9 +20,11 @@ Useful to make a record before reboot, and confirm after reboot.
 
 Make life of reboot easier.
 
+# file-part-hex
+Hex view of part of a file.
+
 # Roadmap
-1. file-part-hex: Hex view of part of a file.
-2. compare-2-folders
+compare-2-folders
 
 - - - -
 
@@ -45,3 +47,6 @@ Make life of reboot easier.
 收集 Linux 运行状态，包括进程、网络、挂载点、环境变量，写入 linux.status 文件夹。
 
 可用于重启前先记录，重启后对照记录核对服务是否齐全，让重启工作轻松点。
+
+# file-part-hex
+十六进制显示文件部分内容。
