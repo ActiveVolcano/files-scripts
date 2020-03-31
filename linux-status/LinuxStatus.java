@@ -4,7 +4,7 @@ import java.util.*;
 
 //----------------------------------------------------------------------------
 /**
- * Linux running processes status.
+ * Collect Linux running status, including processes, networks, mountpoints, environment variables, into a folder named linux.status.
  *
  * <p>
  * Written by CHEN Qingcan, Spring 2020, Foshan China <br>
