@@ -35,7 +35,7 @@ public final class FilePartHex {
 
 		//--------------------------------------------------------------------
 		/** Get configuration from command line arguments. */
-		static Config fromArgs (final String... args) {
+		private static Config fromArgs (final String... args) {
 			var config = new Config ();
 			if (args.length >= 1) {
 				config.where = args[0];
