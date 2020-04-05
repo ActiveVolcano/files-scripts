@@ -24,7 +24,8 @@ Make life of reboot easier.
 Hex view of part of a file.
 
 # Roadmap
-compare-2-folders
+1. BASE64-file
+2. compare-2-folders
 
 - - - -
 
