@@ -23,9 +23,11 @@ Make life of reboot easier.
 # file-part-hex
 Hex view of part of a file.
 
+# compare-2-folders
+Compare 2 folders by size only / 4 kB partial / full file content compare mode.
+
 # Roadmap
-1. BASE64-file
-2. compare-2-folders
+BASE64-file
 
 - - - -
 
@@ -51,3 +53,6 @@ Hex view of part of a file.
 
 # file-part-hex
 十六进制显示文件部分内容。
+
+# compare-2-folders
+比较2个文件夹，支持仅比较文件长度 / 4 kB 部分内容 / 全部内容。
