@@ -44,14 +44,16 @@ Please tell me prefix in other languages by issues or pull requests.
 Java ≥ 11
 
 # 用法
+如无命令行参数，脚本将提示输入。
+
 Windows:
 ```dos
-rename-wechat-qq-export.bat
+rename-wechat-qq-export.bat [path] [-yes]
 ```
 
 Linux:
 ```bash
-./rename-wechat-qq-export.sh
+./rename-wechat-qq-export.sh [path] [-yes]
 ```
 
 # 展望
