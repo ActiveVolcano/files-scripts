@@ -12,14 +12,16 @@ Please tell me prefix in other languages by issues or pull requests.
 Java ≥ 11
 
 # Usage
+If no command line argument provided, it prompts to ask.
+
 Windows:
 ```dos
-rename-wechat-qq-export.bat
+rename-wechat-qq-export.bat [path] [-yes]
 ```
 
 Linux:
 ```bash
-./rename-wechat-qq-export.sh
+./rename-wechat-qq-export.sh [path] [-yes]
 ```
 
 # Further Development
