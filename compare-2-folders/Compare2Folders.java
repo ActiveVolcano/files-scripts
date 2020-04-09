@@ -224,7 +224,7 @@ public final class Compare2Folders {
 					
 				} catch (IOException e) {
 					count.incrementAndGet ();
-					stdout.printf ("%s\t%s%n", relatives, e.getMessage ());
+					stdout.printf ("%s\t%s = %s%n", relatives, e.getClass ().getName (), e.getMessage ());
 				}
 				
 				return FileVisitResult.CONTINUE;
