@@ -12,7 +12,7 @@ Java ≥ 11
 
 # Usage
 ```bash
-./rename-wechat-qq-export.sh
+./linux-status.sh
 ```
 
 - - - -
@@ -29,5 +29,5 @@ Java ≥ 11
 
 # 用法
 ```bash
-./rename-wechat-qq-export.sh
+./linux-status.sh
 ```
