@@ -41,10 +41,10 @@ Java ≥ 11
 
 Windows:
 ```dos
-compare-2-folders.bat [path A] [path B] [-partial | -full] [-exclude wildcards (comma seperated)]
+compare-2-folders.bat [文件夹路径1] [文件夹路径2] [-partial | -full] [-exclude 通配符（半角逗号分隔）]
 ```
 
 Linux:
 ```bash
-./compare-2-folders.sh [path A] [path B] [-partial | -full] [-exclude wildcards (comma seperated)]
+./compare-2-folders.sh [文件夹路径1] [文件夹路径2] [-partial | -full] [-exclude 通配符（半角逗号分隔）]
 ```
