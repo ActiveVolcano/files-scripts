@@ -48,12 +48,12 @@ Java ≥ 11
 
 Windows:
 ```dos
-rename-wechat-qq-export.bat [path] [-yes]
+rename-wechat-qq-export.bat [路径] [-yes]
 ```
 
 Linux:
 ```bash
-./rename-wechat-qq-export.sh [path] [-yes]
+./rename-wechat-qq-export.sh [路径] [-yes]
 ```
 
 # 展望
