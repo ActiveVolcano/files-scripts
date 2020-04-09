@@ -26,7 +26,7 @@ Hex view of part of a file.
 # compare-2-folders
 Compare 2 folders by size only / 4 kB partial / full file content compare mode.
 
-# Roadmap
+# base64-file
 Base64 to file and reverse.
 
 - - - -
@@ -56,3 +56,6 @@ Base64 to file and reverse.
 
 # compare-2-folders
 比较2个文件夹，支持仅比较文件长度 / 4 kB 部分内容 / 全部内容。
+
+# base64-file
+Base64 转成文件，及其反方向转换。
