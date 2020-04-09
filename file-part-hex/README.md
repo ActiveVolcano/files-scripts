@@ -35,18 +35,18 @@ Preview window supports MBCS (Multi-Byte Character Set), like GB2312, GBK, UTF-8
 Java ≥ 11
 
 # 用法
-缺省值：offset = 0、length = 256 (十六进制 100)
+缺省值：偏移 = 0、长度 = 256 (十六进制 100)
 
 如无命令行参数，脚本将提示输入。
 
 Windows:
 ```dos
-file-part-hex.bat [file] [offset] [length]
+file-part-hex.bat [文件名] [偏移] [长度]
 ```
 
 Linux:
 ```bash
-./file-part-hex.sh [file] [offset] [length]
+./file-part-hex.sh [文件名] [偏移] [长度]
 ```
 
 # 展望
