@@ -27,7 +27,7 @@ Hex view of part of a file.
 Compare 2 folders by size only / 4 kB partial / full file content compare mode.
 
 # Roadmap
-BASE64-file
+Base64 to file and reverse.
 
 - - - -
 
