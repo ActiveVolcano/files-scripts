@@ -29,6 +29,9 @@ Compare 2 folders by size only / 4 kB partial / full file content compare mode.
 # base64-file
 Base64 to file and reverse.
 
+# Roadmap
+Auto numbering text lines.
+
 - - - -
 
 | Chinese | 中文 |
