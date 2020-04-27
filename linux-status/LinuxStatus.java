@@ -49,6 +49,7 @@ public final class LinuxStatus {
 		} catch (IOException e) {
 			stderr.printf ("[%s] %s%n", e.getClass ().getName (), e.getMessage ());
 		}
+		stdout.println ("Written into linux.status");
 	}
 
 	//------------------------------------------------------------------------
