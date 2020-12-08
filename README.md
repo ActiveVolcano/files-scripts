@@ -30,7 +30,7 @@ Compare 2 folders by size only / 4 kB partial / full file content compare mode.
 Base64 to file and reverse.
 
 # Roadmap
-Auto numbering text lines.
+Develop byte-array to replace base64-file.
 
 - - - -
 
