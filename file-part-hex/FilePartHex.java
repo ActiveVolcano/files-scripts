@@ -105,7 +105,7 @@ public final class FilePartHex {
 		// table header
 		stdout.println (config.where);
 		stdout.printf ("offset %d (%X in hex) length %d (%X in hex)%n",
-			config.offset, config.offset, config.length, config.length);
+			config.offset, config.offset, r.length, r.length);
 		
 		// column header
 		stdout.print ("\t  ");
@@ -120,15 +120,22 @@ public final class FilePartHex {
 		var visible = new StringBuilder ();
 		for (int i = 0 ; i < r.length ; i++) {
 			if (i % 0x10 == 0) {
-				// line header
 				stdout.println (visible.toString ());
 				visible.setLength (0);
+				// line header
 				stdout.printf ("%02X\t| ", config.offset + i);
 			}
 			
 			stdout.printf ("%02X ", r[i]);
 			visible.append (r[i] >= 0x20 && r[i] <= 0x7E ? (char) r[i] : '.');
 		}
+
+		// ending space padding
+		for (int i = r.length % 0x10 ; i > 0 && i < 0x10 ; i++) {
+			stdout.print ("   ");
+		}
+
+		// remains
 		stdout.println (visible.toString ());
 	}
 
