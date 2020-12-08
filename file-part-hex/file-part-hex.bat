@@ -6,4 +6,7 @@ if defined JAVA_HOME (
 ) else (
 	set JAVA=java
 )
+:forever
 %JAVA% FilePartHex.java %*
+echo;
+goto forever

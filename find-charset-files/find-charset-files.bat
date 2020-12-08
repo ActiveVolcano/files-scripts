@@ -6,4 +6,7 @@ if defined JAVA_HOME (
 ) else (
 	set JAVA=java
 )
+:forever
 %JAVA% -cp lib\commons-io-2.6.jar FindCharsetFiles.java %*
+echo;
+goto forever
