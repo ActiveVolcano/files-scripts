@@ -6,4 +6,7 @@ if defined JAVA_HOME (
 ) else (
 	set JAVA=java
 )
-%JAVA% FileBase64.java %*
+:forever
+%JAVA% -cp lib\commons-codec-1.15.jar ByteArray.java %*
+echo;
+goto forever
