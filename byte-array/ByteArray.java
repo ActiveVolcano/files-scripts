@@ -92,7 +92,7 @@ public final class ByteArray {
 			byte[] input = new byte[0];
 			switch (config.fmtIn) {
 			case BASE64:
-				input = new Base64 ().decode (config.strIn.toUpperCase ());
+				input = new Base64 ().decode (config.strIn);
 				break;
 			case BASE32:
 				input = new Base32 ().decode (config.strIn.toUpperCase ());
