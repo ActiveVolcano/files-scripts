@@ -5,8 +5,8 @@ df -h > df-h.txt 2>&1
 fdisk -l > fdisk-l.txt 2>&1
 mount > mount.txt 2>&1
 free -h > free-h.txt 2>&1
-ca /proc/meminfo > meminfo.txt 2>&1
-ca /proc/cpuinfo > cpuinfo.txt 2>&1
+cat /proc/meminfo > meminfo.txt 2>&1
+cat /proc/cpuinfo > cpuinfo.txt 2>&1
 ip addr > ip_addr.txt 2>&1
 netstat -anp > netstat-anp.txt 2>&1
 iptables -L -n > iptables-L-n.txt 2>&1
