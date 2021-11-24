@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.*;
 import org.apache.commons.codec.binary.Base16;
 import org.apache.commons.codec.binary.Base32;
@@ -28,8 +29,10 @@ public final class ByteArray {
 	static class  Config {
 		String    strIn;
 		Format    fmtIn;
+		Charset   csIn;
 		Format    fmtOut;
 		Path      pathOut;
+		Charset   csOut;
 
 		//--------------------------------------------------------------------
 		/** Get configuration from standard input. */
@@ -56,11 +59,16 @@ public final class ByteArray {
 				"\t6. Base64%n" +
 				"\tF. File path%n" +
 				"\tJ. Java expression%n" +
+				"\tS. String%n" +
 				"Choose: ");
 			config.fmtOut = Format.fromChar (stdin.readLine ().trim ());
 			if (config.fmtOut == Format.FILE) {
 				stdout.print ("Output file name: ");
 				config.pathOut = Paths.get (stdin.readLine ().trim ());
+			}
+			if (config.fmtOut == Format.STRING) {
+				stdout.print ("Output string encoding (character set): ");
+				config.csOut = Charset.forName (stdin.readLine ().trim ());
 			}
 
 			return config;
@@ -70,7 +78,7 @@ public final class ByteArray {
 
 	//------------------------------------------------------------------------
 	static enum Format {
-		BASE64, BASE32, BASE16, FILE, JAVA;
+		BASE64, BASE32, BASE16, FILE, JAVA, STRING;
 
 		static Format fromChar (final String c) throws IOException {
 			switch (c.toUpperCase ()) {
@@ -79,6 +87,7 @@ public final class ByteArray {
 			case "6": return Format.BASE64;
 			case "F": return Format.FILE;
 			case "J": return Format.JAVA;
+			case "S": return Format.STRING;
 			default : throw new IOException ("Wrong choice.");
 			}
 		}
@@ -132,6 +141,10 @@ public final class ByteArray {
 					sb.setLength (sb.length () - 2);
 				}
 				output = sb.toString ();
+				break;
+			case STRING:
+				output = new String (input, config.csOut);
+				break;
 			}
 
 			stdout.println ("Result:");
