@@ -42,23 +42,28 @@ public final class ByteArray {
 			// input
 			stdout.printf (
 				"Input source%n" +
-				"\t1. Base16%n" +
+				"\t1. Base16 (Hex)%n" +
 				"\t3. Base32%n" +
 				"\t6. Base64%n" +
 				"\tF. File path%n" +
+				"\tS. String%n" +
 				"Choose: ");
 			config.fmtIn = Format.fromChar (stdin.readLine ().trim ());
 			stdout.printf ("Input string: ");
 			config.strIn = stdin.readLine ().trim ();
+			if (config.fmtIn == Format.STRING) {
+				stdout.print ("Input string encoding (character set): ");
+				config.csIn = Charset.forName (stdin.readLine ().trim ());
+			}
 
 			// output
 			stdout.printf (
 				"Output target%n" +
-				"\t1. Base16%n" +
+				"\t1. Base16 (Hex)%n" +
 				"\t3. Base32%n" +
 				"\t6. Base64%n" +
 				"\tF. File path%n" +
-				"\tJ. Java expression%n" +
+				"\tJ. Java expression (e.g., 0x48, 0x69)%n" +
 				"\tS. String%n" +
 				"Choose: ");
 			config.fmtOut = Format.fromChar (stdin.readLine ().trim ());
@@ -114,6 +119,9 @@ public final class ByteArray {
 				break;
 			case JAVA:
 				throw new IOException ("Wrong choice.");
+			case STRING:
+				input = config.strIn.getBytes (config.csIn);
+				break;
 			}
 
 			String output = "";
@@ -132,15 +140,7 @@ public final class ByteArray {
 				output = config.pathOut.toString ();
 				break;
 			case JAVA:
-				var s16 = new Base16 ().encodeToString (input);
-				var sb = new StringBuilder ();
-				for (int i = 0 ; i < s16.length () ; i += 2) {
-					sb.append ("0x").append (s16.charAt (i)).append (s16.charAt (i + 1)).append (", ");
-				}
-				if (sb.length () >= 2) {
-					sb.setLength (sb.length () - 2);
-				}
-				output = sb.toString ();
+				output = toJavaExpression (input);
 				break;
 			case STRING:
 				output = new String (input, config.csOut);
@@ -153,6 +153,19 @@ public final class ByteArray {
 		} catch (IOException e) {
 			stderr.println (e.getMessage ());
 		}
+	}
+
+	//------------------------------------------------------------------------
+	private static String toJavaExpression (final byte[] input) {
+		var s16 = new Base16 ().encodeToString (input);
+		var sb = new StringBuilder ();
+		for (int i = 0 ; i < s16.length () ; i += 2) {
+			sb.append ("0x").append (s16.charAt (i)).append (s16.charAt (i + 1)).append (", ");
+		}
+		if (sb.length () >= 2) {
+			sb.setLength (sb.length () - 2);
+		}
+		return sb.toString ();
 	}
 
 }
