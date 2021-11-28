@@ -186,60 +186,27 @@ public final class ByteArray {
 			byte b1 = 0;
 
 			c.rewind ();
-			if (c1 == '\\' && i < input.length () - 1) {
-				if (input.charAt (i + 1) == 'a') {
-					// BEL
-					c.append ('\u0007');
-					i++;
-				} else if (input.charAt (i + 1) == 'b') {
-					// BS
-					c.append ('\b');
-					i++;
-				} else if (input.charAt (i + 1) == 'f') {
-					// FF
-					c.append ('\f');
-					i++;
-				} else if (input.charAt (i + 1) == 'n') {
-					// LF
-					c.append ('\n');
-					i++;
-				} else if (input.charAt (i + 1) == 'r') {
-					// CR
-					c.append ('\r');
-					i++;
-				} else if (input.charAt (i + 1) == 't') {
-					// HT
-					c.append ('\t');
-					i++;
-				} else if (input.charAt (i + 1) == 'v') {
-					// VT
-					c.append ('\u000B');
-					i++;
-				} else if (input.charAt (i + 1) == '\'') {
-					// '
-					c.append ('\'');
-					i++;
-				} else if (input.charAt (i + 1) == '\"') {
-					// "
-					c.append ('\"');
-					i++;
-				} else if (input.charAt (i + 1) == '\\') {
-					// \
-					c.append ('\\');
-					i++;
-				} else if (input.charAt (i + 1) == 'x' || input.charAt (i + 1) == 'X') {
-					// Hex
+			if (c1 != '\\') {
+				c.append (c1);
+			} else if (i < input.length () - 1) {
+				c1 = input.charAt (++i);
+				switch (c1) {
+				case 'a':  c.append ('\u0007'); break; // BEL
+				case 'b':  c.append ('\b');     break; // BS
+				case 'f':  c.append ('\f');     break; // FF
+				case 'n':  c.append ('\n');     break; // LF
+				case 'r':  c.append ('\r');     break; // CR
+				case 't':  c.append ('\t');     break; // HT
+				case 'v':  c.append ('\u000B'); break; // VT
+				case '\'': c.append ('\'');     break; // '
+				case '\"': c.append ('\"');     break; // "
+				case '\\': c.append ('\\');     break; // \
+				}
+				if (c1 == 'x' || c1 == 'X') {          // Hex
 					var hex = new StringBuilder ();
-					i += 2;
-					if (i < input.length ()) {
+					while (++i < input.length ()) {
 						c1 = input.charAt (i);
-						if (isHexChar (c1)) hex.append (c1);
-						i++;
-						if (i < input.length ()) {
-							c1 = input.charAt (i);
-							if (isHexChar (c1)) hex.append (c1);
-							i++;
-						}
+						if (isHexChar (c1)) hex.append (c1); else break;
 					}
 					i--;
 					if (! hex.isEmpty()) {
@@ -247,8 +214,18 @@ public final class ByteArray {
 						b1 = decodeBase16 (hex) [0];
 					}
 				}
-			} else {
-				c.append (c1);
+				if (isOctChar (c1)) {                  // Oct
+					var oct = new StringBuilder ();
+					for (; i < input.length () ; i++) {
+						c1 = input.charAt (i);
+						if (isOctChar (c1)) oct.append (c1); else break;
+					}
+					i--;
+					if (! oct.isEmpty()) {
+						isChar = false;
+						b1 = (byte) Integer.parseInt (oct.toString (), 8);
+					}
+				}
 			}
 			
 			if (isChar)
@@ -267,6 +244,11 @@ public final class ByteArray {
 		return (c1 >= '0' && c1 <= '9') ||
 		       (c1 >= 'A' && c1 <= 'F') ||
 		       (c1 >= 'a' && c1 <= 'f');
+	}
+
+	//------------------------------------------------------------------------
+	private static boolean isOctChar (final char c1) {
+		return (c1 >= '0' && c1 <= '7');
 	}
 
 	//------------------------------------------------------------------------
