@@ -58,7 +58,7 @@ public final class ByteArray {
 			stdout.printf ("Input string: ");
 			config.strIn = readStdinLine ();
 			if (config.fmtIn == Format.C_ESCAPED        ||
-			    config.fmtIn == Format.ESCAPED        ||
+			    config.fmtIn == Format.ESCAPED          ||
 			    config.fmtIn == Format.QUOTED_PRINTABLE ||
 			    config.fmtIn == Format.STRING           ||
 			    config.fmtIn == Format.URL_ENCODED) {
@@ -109,8 +109,8 @@ public final class ByteArray {
 			case "F": return Format.FILE;
 			case "J": return Format.JAVA;
 			case "Q": return Format.QUOTED_PRINTABLE;
-			case "U": return Format.URL_ENCODED;
 			case "S": return Format.STRING;
+			case "U": return Format.URL_ENCODED;
 			default : throw new IOException ("Wrong choice.");
 			}
 		}
