@@ -49,16 +49,18 @@ public final class ByteArray {
 				"\t6. Base64%n" +
 				"\tC. C escaped string (e.g. \\x22Hi\\x22)%n" +
 				"\tF. File path%n" +
+				"\tQ. Quoted-printable (e.g. =22Hi=22)%n" +
 				"\tS. String%n" +
 				"\tU. URL encoded string (e.g. %%22Hi%%22)%n" +
 				"Choose: ");
 			config.fmtIn = Format.fromChar (readStdinLine ());
 			stdout.printf ("Input string: ");
 			config.strIn = readStdinLine ();
-			if (config.fmtIn == Format.C_ESCAPED   ||
-			    config.fmtIn == Format.STRING      ||
+			if (config.fmtIn == Format.C_ESCAPED        ||
+			    config.fmtIn == Format.QUOTED_PRINTABLE ||
+			    config.fmtIn == Format.STRING           ||
 			    config.fmtIn == Format.URL_ENCODED) {
-				stdout.print ("Input string encoding (character set): ");
+				stdout.print ("Input character set: ");
 				config.csIn = Charset.forName (readStdinLine ());
 			}
 
@@ -70,6 +72,7 @@ public final class ByteArray {
 				"\t6. Base64%n" +
 				"\tF. File path%n" +
 				"\tJ. Java expression (e.g. 0x48, 0x69)%n" +
+				"\tQ. Quoted-printable (e.g. =22Hi=22)%n" +
 				"\tS. String%n" +
 				"\tU. URL encoded string (e.g. %%22Hi%%22)%n" +
 				"Choose: ");
@@ -78,9 +81,10 @@ public final class ByteArray {
 				stdout.print ("Output file name: ");
 				config.pathOut = Paths.get (readStdinLine ());
 			}
-			if (config.fmtOut == Format.STRING ||
+			if (config.fmtOut == Format.QUOTED_PRINTABLE ||
+			    config.fmtOut == Format.STRING           ||
 			    config.fmtOut == Format.URL_ENCODED) {
-				stdout.print ("Output string encoding (character set): ");
+				stdout.print ("Output character set: ");
 				config.csOut = Charset.forName (readStdinLine ());
 			}
 
@@ -91,7 +95,7 @@ public final class ByteArray {
 
 	//------------------------------------------------------------------------
 	static enum Format {
-		BASE64, BASE32, BASE16, C_ESCAPED, FILE, JAVA, STRING, URL_ENCODED;
+		BASE16, BASE32, BASE64, C_ESCAPED, FILE, JAVA, QUOTED_PRINTABLE, STRING, URL_ENCODED;
 
 		static Format fromChar (final String c) throws IOException {
 			switch (c.toUpperCase ()) {
@@ -101,6 +105,7 @@ public final class ByteArray {
 			case "C": return Format.C_ESCAPED;
 			case "F": return Format.FILE;
 			case "J": return Format.JAVA;
+			case "Q": return Format.QUOTED_PRINTABLE;
 			case "U": return Format.URL_ENCODED;
 			case "S": return Format.STRING;
 			default : throw new IOException ("Wrong choice.");
@@ -132,11 +137,14 @@ public final class ByteArray {
 				break;
 			case JAVA:
 				throw new IOException ("Wrong choice.");
-			case URL_ENCODED:
-				input = URLDecoder.decode (config.strIn, config.csIn.name ()).getBytes (config.csIn);
+			case QUOTED_PRINTABLE:
+				input = URLDecoder.decode (config.strIn.replace ('=', '%'), config.csIn.name ()).getBytes (config.csIn);
 				break;
 			case STRING:
 				input = config.strIn.getBytes (config.csIn);
+				break;
+			case URL_ENCODED:
+				input = URLDecoder.decode (config.strIn, config.csIn.name ()).getBytes (config.csIn);
 				break;
 			}
 
@@ -151,6 +159,8 @@ public final class ByteArray {
 			case BASE64:
 				output = new Base64 ().encodeToString (input);
 				break;
+			case C_ESCAPED:
+				throw new IOException ("Wrong choice.");
 			case FILE:
 				Files.write (config.pathOut, input);
 				output = config.pathOut.toString ();
@@ -158,11 +168,14 @@ public final class ByteArray {
 			case JAVA:
 				output = toJavaExpression (input);
 				break;
-			case URL_ENCODED:
-				output = URLEncoder.encode (new String (input, config.csOut), config.csOut.name ());
+			case QUOTED_PRINTABLE:
+				output = URLEncoder.encode (new String (input, config.csOut), config.csOut.name ()).replace ('%', '=');
 				break;
 			case STRING:
 				output = new String (input, config.csOut);
+				break;
+			case URL_ENCODED:
+				output = URLEncoder.encode (new String (input, config.csOut), config.csOut.name ());
 				break;
 			}
 
