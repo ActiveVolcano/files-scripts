@@ -48,6 +48,7 @@ public final class ByteArray {
 				"\t3. Base32%n" +
 				"\t6. Base64%n" +
 				"\tC. C escaped string (e.g. \\x22Hi\\x22)%n" +
+				"\tE. Java escaped string (e.g. \\u0022Hi\\u0022)%n" +
 				"\tF. File path%n" +
 				"\tQ. Quoted-printable (e.g. =22Hi=22)%n" +
 				"\tS. String%n" +
@@ -57,6 +58,7 @@ public final class ByteArray {
 			stdout.printf ("Input string: ");
 			config.strIn = readStdinLine ();
 			if (config.fmtIn == Format.C_ESCAPED        ||
+			    config.fmtIn == Format.ESCAPED        ||
 			    config.fmtIn == Format.QUOTED_PRINTABLE ||
 			    config.fmtIn == Format.STRING           ||
 			    config.fmtIn == Format.URL_ENCODED) {
@@ -95,7 +97,7 @@ public final class ByteArray {
 
 	//------------------------------------------------------------------------
 	static enum Format {
-		BASE16, BASE32, BASE64, C_ESCAPED, FILE, JAVA, QUOTED_PRINTABLE, STRING, URL_ENCODED;
+		BASE16, BASE32, BASE64, C_ESCAPED, ESCAPED, FILE, JAVA, QUOTED_PRINTABLE, STRING, URL_ENCODED;
 
 		static Format fromChar (final String c) throws IOException {
 			switch (c.toUpperCase ()) {
@@ -103,6 +105,7 @@ public final class ByteArray {
 			case "3": return Format.BASE32;
 			case "6": return Format.BASE64;
 			case "C": return Format.C_ESCAPED;
+			case "E": return Format.ESCAPED;
 			case "F": return Format.FILE;
 			case "J": return Format.JAVA;
 			case "Q": return Format.QUOTED_PRINTABLE;
@@ -132,6 +135,9 @@ public final class ByteArray {
 			case C_ESCAPED:
 				input = fromCEscaped (config.strIn, config.csIn);
 				break;
+			case ESCAPED:
+				input = fromJavaEscaped (config.strIn, config.csIn);
+				break;
 			case FILE:
 				input = Files.readAllBytes (Paths.get (config.strIn));
 				break;
@@ -160,6 +166,7 @@ public final class ByteArray {
 				output = new Base64 ().encodeToString (input);
 				break;
 			case C_ESCAPED:
+			case ESCAPED:
 				throw new IOException ("Wrong choice.");
 			case FILE:
 				Files.write (config.pathOut, input);
@@ -274,6 +281,60 @@ public final class ByteArray {
 	//------------------------------------------------------------------------
 	private static boolean isOctChar (final char c1) {
 		return (c1 >= '0' && c1 <= '7');
+	}
+
+	//------------------------------------------------------------------------
+	/**
+	 * Not to use Apache Commons because not support octal, \\uu
+	 */
+	private static byte[] fromJavaEscaped (final String input, Charset charset) {
+		var s = new StringBuilder ();
+		for (int i = 0 ; i < input.length () ; i++) {
+			char c1 = input.charAt (i);
+
+			if (c1 != '\\') {
+				s.append (c1);
+			} else if (i < input.length () - 1) {
+				c1 = input.charAt (++i);
+				switch (c1) {
+				case 'b':  s.append ('\b');     break; // BS
+				case 'f':  s.append ('\f');     break; // FF
+				case 'n':  s.append ('\n');     break; // LF
+				case 'r':  s.append ('\r');     break; // CR
+				case 't':  s.append ('\t');     break; // HT
+				case '\'': s.append ('\'');     break; // '
+				case '\"': s.append ('\"');     break; // "
+				case '\\': s.append ('\\');     break; // \
+				}
+				if (c1 == 'u' || c1 == 'U') {          // Hex
+					if (input.charAt (i + 1) == 'u' || input.charAt (i + 1) == 'U') i++;
+					var hex = new StringBuilder ();
+					while (++i < input.length ()) {
+						c1 = input.charAt (i);
+						if (isHexChar (c1)) hex.append (c1); else break;
+					}
+					i--;
+					if (! hex.isEmpty()) {
+						int codepoint = Integer.parseInt (hex.toString (), 16);
+						s.append (Character.toChars (codepoint) [0]);
+					}
+				}
+				if (isOctChar (c1)) {                  // Oct
+					var oct = new StringBuilder ();
+					for (; i < input.length () ; i++) {
+						c1 = input.charAt (i);
+						if (isOctChar (c1)) oct.append (c1); else break;
+					}
+					i--;
+					if (! oct.isEmpty()) {
+						int codepoint = Integer.parseInt (oct.toString (), 8);
+						s.append (Character.toChars (codepoint) [0]);
+					}
+				}
+			}
+		}
+
+		return s.toString ().getBytes (charset);
 	}
 
 	//------------------------------------------------------------------------
