@@ -9,7 +9,10 @@ import org.apache.commons.codec.binary.Base64;
 
 //----------------------------------------------------------------------------
 /**
- * Byte array from / to Base16 / Base32 / Base64 string, C escaped string, file, Java expression.
+ * Byte array from / to Base16 / Base32 / Base64 string,
+ * C / Java escaped string,
+ * Quoted-printable / URL encoded string,
+ * file, Java expression.
  *
  * <p>
  * Written by CHEN Qingcan, Spring 2020 ~ Winter 2021, Foshan China <br>
@@ -18,7 +21,7 @@ import org.apache.commons.codec.binary.Base64;
  * <p>
  * Run as script via Java 11: <br>
  * <code>
- * java ByteArray.java
+ * java -cp lib/commons-codec-1.15.jar ByteArray.java
  * </code>
  */
 public final class ByteArray {
@@ -341,8 +344,11 @@ public final class ByteArray {
 	private static String toJavaExpression (final byte[] input) {
 		var s16 = new Base16 ().encodeToString (input);
 		var sb = new StringBuilder ();
-		for (int i = 0 ; i < s16.length () ; i += 2) {
-			sb.append ("0x").append (s16.charAt (i)).append (s16.charAt (i + 1)).append (", ");
+		for (int i = 0 ; i < s16.length () ; ) {
+			sb.append ("0x")
+			  .append (s16.charAt (i++))
+			  .append (s16.charAt (i++))
+			  .append (", ");
 		}
 		if (sb.length () >= 2) {
 			sb.setLength (sb.length () - 2);
