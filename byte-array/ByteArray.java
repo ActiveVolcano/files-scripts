@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.*;
 import java.nio.*;
 import java.nio.charset.Charset;
 import java.nio.file.*;
@@ -8,10 +9,10 @@ import org.apache.commons.codec.binary.Base64;
 
 //----------------------------------------------------------------------------
 /**
- * Byte array to file, to Base64 string, to Base32 string, to Base16 string, to Java expression.
+ * Byte array from / to Base16 / Base32 / Base64 string, C escaped string, file, Java expression.
  *
  * <p>
- * Written by CHEN Qingcan, Spring 2020, Foshan China <br>
+ * Written by CHEN Qingcan, Spring 2020 ~ Winter 2021, Foshan China <br>
  * Open source under WTFPL (Do What The Fuck You Want To Public License) http://www.wtfpl.net
  *
  * <p>
@@ -42,39 +43,43 @@ public final class ByteArray {
 
 			// input
 			stdout.printf (
-				"Input source%n" +
+				"Input source:%n" +
 				"\t1. Base16 (Hex)%n" +
 				"\t3. Base32%n" +
 				"\t6. Base64%n" +
 				"\tC. C escaped string (e.g. \\x22Hi\\x22)%n" +
 				"\tF. File path%n" +
 				"\tS. String%n" +
+				"\tU. URL encoded string (e.g. %%22Hi%%22)%n" +
 				"Choose: ");
 			config.fmtIn = Format.fromChar (readStdinLine ());
 			stdout.printf ("Input string: ");
 			config.strIn = readStdinLine ();
-			if (config.fmtIn == Format.C_ESCAPED ||
-			    config.fmtIn == Format.STRING) {
+			if (config.fmtIn == Format.C_ESCAPED   ||
+			    config.fmtIn == Format.STRING      ||
+			    config.fmtIn == Format.URL_ENCODED) {
 				stdout.print ("Input string encoding (character set): ");
 				config.csIn = Charset.forName (readStdinLine ());
 			}
 
 			// output
 			stdout.printf (
-				"Output target%n" +
+				"Output target:%n" +
 				"\t1. Base16 (Hex)%n" +
 				"\t3. Base32%n" +
 				"\t6. Base64%n" +
 				"\tF. File path%n" +
 				"\tJ. Java expression (e.g. 0x48, 0x69)%n" +
 				"\tS. String%n" +
+				"\tU. URL encoded string (e.g. %%22Hi%%22)%n" +
 				"Choose: ");
 			config.fmtOut = Format.fromChar (readStdinLine ());
 			if (config.fmtOut == Format.FILE) {
 				stdout.print ("Output file name: ");
 				config.pathOut = Paths.get (readStdinLine ());
 			}
-			if (config.fmtOut == Format.STRING) {
+			if (config.fmtOut == Format.STRING ||
+			    config.fmtOut == Format.URL_ENCODED) {
 				stdout.print ("Output string encoding (character set): ");
 				config.csOut = Charset.forName (readStdinLine ());
 			}
@@ -86,7 +91,7 @@ public final class ByteArray {
 
 	//------------------------------------------------------------------------
 	static enum Format {
-		BASE64, BASE32, BASE16, C_ESCAPED, FILE, JAVA, STRING;
+		BASE64, BASE32, BASE16, C_ESCAPED, FILE, JAVA, STRING, URL_ENCODED;
 
 		static Format fromChar (final String c) throws IOException {
 			switch (c.toUpperCase ()) {
@@ -96,6 +101,7 @@ public final class ByteArray {
 			case "C": return Format.C_ESCAPED;
 			case "F": return Format.FILE;
 			case "J": return Format.JAVA;
+			case "U": return Format.URL_ENCODED;
 			case "S": return Format.STRING;
 			default : throw new IOException ("Wrong choice.");
 			}
@@ -126,6 +132,9 @@ public final class ByteArray {
 				break;
 			case JAVA:
 				throw new IOException ("Wrong choice.");
+			case URL_ENCODED:
+				input = URLDecoder.decode (config.strIn, config.csIn.name ()).getBytes (config.csIn);
+				break;
 			case STRING:
 				input = config.strIn.getBytes (config.csIn);
 				break;
@@ -148,6 +157,9 @@ public final class ByteArray {
 				break;
 			case JAVA:
 				output = toJavaExpression (input);
+				break;
+			case URL_ENCODED:
+				output = URLEncoder.encode (new String (input, config.csOut), config.csOut.name ());
 				break;
 			case STRING:
 				output = new String (input, config.csOut);
