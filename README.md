@@ -27,7 +27,7 @@ Hex view of part of a file.
 Compare 2 folders by size only / 4 kB partial / full file content compare mode.
 
 # byte-array
-Byte array to file, to Base64 string, to Base32 string, to Base16 string, to Java expression.
+Byte array from / to Base16 / Base32 / Base64 string, C / Java escaped string, Quoted-printable / URL encoded string, file, Java expression.
 
 - - - -
 
@@ -58,4 +58,4 @@ Byte array to file, to Base64 string, to Base32 string, to Base16 string, to Jav
 比较2个文件夹，支持仅比较文件长度 / 4 kB 部分内容 / 全部内容。
 
 # byte-array
-字节数组转成文件、Base64 字符串、Base32 字符串、Base16 字符串、Java 表达式。
+字节数组与 Base16 / Base32 / Base64 字符串、C / Java / Quoted-printable / URL 转义字符串、文件、Java 表达式之间转换。
