@@ -76,6 +76,7 @@ public final class ByteArray {
 				"\t3. Base32%n" +
 				"\t6. Base64%n" +
 				"\tF. File path%n" +
+				"\tH. Hash (CRC32, MD5, SHA-1, SHA-256, SHA3-256)%n" +
 				"\tJ. Java expression (e.g. 0x48, 0x69)%n" +
 				"\tQ. Quoted-printable (e.g. =22Hi=22)%n" +
 				"\tS. String%n" +
@@ -100,7 +101,7 @@ public final class ByteArray {
 
 	//------------------------------------------------------------------------
 	static enum Format {
-		BASE16, BASE32, BASE64, C_ESCAPED, ESCAPED, FILE, JAVA, QUOTED_PRINTABLE, STRING, URL_ENCODED;
+		BASE16, BASE32, BASE64, C_ESCAPED, ESCAPED, FILE, HASH, JAVA, QUOTED_PRINTABLE, STRING, URL_ENCODED;
 
 		static Format fromChar (final String c) throws IOException {
 			switch (c.toUpperCase ()) {
@@ -110,6 +111,7 @@ public final class ByteArray {
 			case "C": return Format.C_ESCAPED;
 			case "E": return Format.ESCAPED;
 			case "F": return Format.FILE;
+			case "H": return Format.HASH;
 			case "J": return Format.JAVA;
 			case "Q": return Format.QUOTED_PRINTABLE;
 			case "S": return Format.STRING;
@@ -144,6 +146,7 @@ public final class ByteArray {
 			case FILE:
 				input = Files.readAllBytes (Paths.get (config.strIn));
 				break;
+			case HASH:
 			case JAVA:
 				throw new IOException ("Wrong choice.");
 			case QUOTED_PRINTABLE:
@@ -174,6 +177,9 @@ public final class ByteArray {
 			case FILE:
 				Files.write (config.pathOut, input);
 				output = config.pathOut.toString ();
+				break;
+			case HASH:
+				output = toHash (input);
 				break;
 			case JAVA:
 				output = toJavaExpression (input);
@@ -338,6 +344,46 @@ public final class ByteArray {
 		}
 
 		return s.toString ().getBytes (charset);
+	}
+
+	//------------------------------------------------------------------------
+	private static String toHash (final byte[] input) {
+		try {
+			var crc32enc = new java.util.zip.CRC32 ();
+			crc32enc.update (input);
+			long crc32long = crc32enc.getValue ();
+			String crc32str = String.format ("%08X", crc32long);
+
+			var md5enc = java.security.MessageDigest.getInstance ("MD5");
+			md5enc.update (input);
+			byte[] md5b = md5enc.digest();
+			String md5str = new Base16 ().encodeToString (md5b);
+
+			var sha1enc = java.security.MessageDigest.getInstance ("SHA-1");
+			sha1enc.update (input);
+			byte[] sha1b = sha1enc.digest();
+			String sha1str = new Base16 ().encodeToString (sha1b);
+
+			var sha256enc = java.security.MessageDigest.getInstance ("SHA-256");
+			sha256enc.update (input);
+			byte[] sha256b = sha256enc.digest();
+			String sha256str = new Base16 ().encodeToString (sha256b);
+
+			var sha3enc = java.security.MessageDigest.getInstance ("SHA3-256");
+			sha3enc.update (input);
+			byte[] sha3b = sha3enc.digest();
+			String sha3str = new Base16 ().encodeToString (sha3b);
+
+			return String.format (
+				"CRC32    = %s%n" +
+				"MD5      = %s%n" +
+				"SHA-1    = %s%n" +
+				"SHA-256  = %s%n" +
+				"SHA3-256 = %s",
+				crc32str, md5str, sha1str, sha256str, sha3str);
+		} catch (java.security.NoSuchAlgorithmException e) {
+			return e.getMessage ();
+		}
 	}
 
 	//------------------------------------------------------------------------
