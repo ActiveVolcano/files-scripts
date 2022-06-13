@@ -225,6 +225,7 @@ public final class ByteArray {
 			char c1 = input.charAt (i);
 			boolean isChar = true;
 			byte b1 = 0;
+			var num = new StringBuilder (3);
 
 			c.rewind ();
 			if (c1 != '\\') {
@@ -232,40 +233,39 @@ public final class ByteArray {
 			} else if (i < input.length () - 1) {
 				c1 = input.charAt (++i);
 				switch (c1) {
-				case 'a':  c.append ('\u0007'); break; // BEL
-				case 'b':  c.append ('\b');     break; // BS
-				case 'f':  c.append ('\f');     break; // FF
-				case 'n':  c.append ('\n');     break; // LF
-				case 'r':  c.append ('\r');     break; // CR
-				case 't':  c.append ('\t');     break; // HT
-				case 'v':  c.append ('\u000B'); break; // VT
-				case '\'': c.append ('\'');     break; // '
-				case '\"': c.append ('\"');     break; // "
-				case '\\': c.append ('\\');     break; // \
+				case 'a':  c.append ('\u0007'); break;  // BEL
+				case 'b':  c.append ('\b');     break;  // BS
+				case 'f':  c.append ('\f');     break;  // FF
+				case 'n':  c.append ('\n');     break;  // LF
+				case 'r':  c.append ('\r');     break;  // CR
+				case 't':  c.append ('\t');     break;  // HT
+				case 'v':  c.append ('\u000B'); break;  // VT
+				case '\'': c.append ('\'');     break;  // '
+				case '\"': c.append ('\"');     break;  // "
+				case '\\': c.append ('\\');     break;  // \
 				}
-				if (c1 == 'x' || c1 == 'X') {          // Hex
-					var hex = new StringBuilder ();
-					while (++i < input.length ()) {
-						c1 = input.charAt (i);
-						if (isHexChar (c1)) hex.append (c1); else break;
-					}
-					i--;
-					if (! hex.isEmpty()) {
-						isChar = false;
-						b1 = decodeBase16 (hex) [0];
-					}
+				if ((c1 == 'x' || c1 == 'X') &&         // Hex
+				    (i < input.length () - 2) &&
+				    isHexChar (input.charAt (i + 1)) && isHexChar (input.charAt (i + 2))
+				) {
+					isChar = false;
+					num.setLength (0);
+					num.append (input.charAt (++i));
+					num.append (input.charAt (++i));
+					b1 = decodeBase16 (num) [0];
 				}
-				if (isOctChar (c1)) {                  // Oct
-					var oct = new StringBuilder ();
-					for (; i < input.length () ; i++) {
-						c1 = input.charAt (i);
-						if (isOctChar (c1)) oct.append (c1); else break;
-					}
-					i--;
-					if (! oct.isEmpty()) {
-						isChar = false;
-						b1 = (byte) Integer.parseInt (oct.toString (), 8);
-					}
+				if (isOctChar (c1) &&                   // Oct
+				    (i < input.length () - 3) &&
+				    isHexChar (input.charAt (i + 1)) &&
+				    isHexChar (input.charAt (i + 2)) &&
+				    isHexChar (input.charAt (i + 3))
+				) {
+					isChar = false;
+					num.setLength (0);
+					num.append (input.charAt (++i));
+					num.append (input.charAt (++i));
+					num.append (input.charAt (++i));
+					b1 = (byte) Integer.parseInt (num.toString (), 8);
 				}
 			}
 			
