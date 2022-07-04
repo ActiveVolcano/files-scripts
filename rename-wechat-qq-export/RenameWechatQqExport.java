@@ -25,13 +25,13 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 public final class RenameWechatQqExport {
 
 	static final WildcardFileFilter WILDCARDS  = new WildcardFileFilter (
-		List.of ("*.jpg", "*.jpeg", "*.jpe", "*.png", "*.gif", "*.bmp"),
+		List.of ("*.jpg", "*.jpeg", "*.jpe", "*.png", "*.gif", "*.bmp", "*.mp4"),
 		IOCase.SYSTEM);
 
 	static final List<String> PREFIX_TO_REMOVE = List.of (
 		// Source file in GBK
 		// String constants in UTF-16BE ΢��ͼƬ TIMͼƬ QQͼƬ
-		"\u5FAE\u4FE1\u56FE\u7247", "TIM\u56FE\u7247", "QQ\u56FE\u7247", "mmexport");
+		"\u5FAE\u4FE1\u56FE\u7247", "TIM\u56FE\u7247", "QQ\u56FE\u7247", "mmexport", "WeChat");
 
 	static final BufferedReader stdin = new BufferedReader (new InputStreamReader (System.in));
 	static final PrintStream stdout = System.out;
