@@ -32,6 +32,9 @@ Byte array from / to Base16 / Base32 / Base64 string, C / Java escaped string, Q
 # truncate
 A simple truncate command that can be run under Windows, to change the file size.
 
+# file-base64-linebreak
+Encode file or clipboard to Base64 form with linebreak, so that there are no more than 76 characters per line, according to RFC 2045.
+
 - - - -
 
 | Chinese | 中文 |
@@ -65,3 +68,6 @@ A simple truncate command that can be run under Windows, to change the file size
 
 # truncate
 可运行在视窗系统的简单 truncate 命令，改文件大小。
+
+# file-base64-linebreak
+将文件或剪贴板编码为带换行的Base64，每行不超过76字符，以符合RFC 2045。
