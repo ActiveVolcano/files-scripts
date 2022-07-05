@@ -30,7 +30,7 @@ Compare 2 folders by size only / 4 kB partial / full file content compare mode.
 Byte array from / to Base16 / Base32 / Base64 string, C / Java escaped string, Quoted-printable / URL encoded string, file, Java expression.
 
 # truncate
-A simple truncate command that can be run under Windows.
+A simple truncate command that can be run under Windows, to change the file size.
 
 - - - -
 
@@ -64,4 +64,4 @@ A simple truncate command that can be run under Windows.
 字节数组与 Base16 / Base32 / Base64 字符串、C / Java / Quoted-printable / URL 转义字符串、文件、Java 表达式之间转换。
 
 # truncate
-可运行在视窗系统的简单 truncate 命令。
+可运行在视窗系统的简单 truncate 命令，改文件大小。
